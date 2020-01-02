@@ -35,6 +35,7 @@ import com.owncloud.android.lib.common.network.WebdavUtils;
 import com.owncloud.android.lib.common.operations.RemoteOperation;
 import com.owncloud.android.lib.common.operations.RemoteOperationResult;
 import com.owncloud.android.lib.common.utils.Log_OC;
+import timber.log.Timber;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -108,7 +109,9 @@ public class ReadRemoteFolderOperation extends RemoteOperation<ArrayList<RemoteF
         } catch (Exception e) {
             result = new RemoteOperationResult<>(e);
         } finally {
-            if (result.isSuccess()) {
+            if (result == null) {
+                Timber.e("Synchronized " + mRemotePath + ": result is null");
+            } else if (result.isSuccess()) {
                 Log_OC.i(TAG, "Synchronized " + mRemotePath + ": " + result.getLogMessage());
             } else {
                 if (result.isException()) {
